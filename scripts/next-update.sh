@@ -5,7 +5,7 @@ NEXT_VERSION="10.0.9"
 ROOT=$(pwd)
 
 echo "==================== NPM ===================="
-npm --prefix "$ROOT/src/__tests__/__apps__/npm-basic" install "next@$NEXT_VERSION"
+npm --prefix "$ROOT/src/__tests__/__apps__/npm-basic" install "next@$NEXT_VERSION" --save-exact
 
 echo "==================== PNPM ===================="
 pnpm --dir "$ROOT/src/__tests__/__apps__/pnpm" install "next@$NEXT_VERSION"
