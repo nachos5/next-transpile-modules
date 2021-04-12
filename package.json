@@ -12,7 +12,7 @@
     "setup": "node --trace-uncaught src/__tests__/setup.js",
     "update:next": "npm run setup && bash scripts/next-update.sh",
     "pretest": "npm run setup",
-    "quickie": "node --trace-uncaught src/__tests__/setup.js && npm run dev --prefix src/__tests__/__apps__/npm-basic",
+    "quickie": "node --trace-uncaught src/__tests__/setup.js && yarn --cwd src/__tests__/__apps__/webpack-5/app run build",
     "test": "jest --forceExit",
     "test:debug": "jest --detectOpenHandles --forceExit",
     "test:lint": "eslint .",
