@@ -56,10 +56,13 @@ const createLogger = (enable) => {
  * @param {function} logger
  * @returns {(path: string) => boolean}
  */
- const createWebpackMatcher = (modulesToTranspile, logger = createLogger(false)) => {
+const createWebpackMatcher = (modulesToTranspile, logger = createLogger(false)) => {
   // create an array of tuples with each passed in module to transpile and its node_modules depth
   // example: ['/full/path/to/node_modules/button/node_modules/icon', 2]
-  const modulePathsWithDepth = modulesToTranspile.map(modulePath => [modulePath, (modulePath.match(/node_modules/g) || []).length])
+  const modulePathsWithDepth = modulesToTranspile.map((modulePath) => [
+    modulePath,
+    (modulePath.match(/node_modules/g) || []).length,
+  ]);
 
   return (filePath) => {
     const nodeModulesDepth = (filePath.match(/node_modules/g) || []).length;
