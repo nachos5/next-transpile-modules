@@ -225,6 +225,7 @@ const withTmInitializer = (modules = [], options = {}) => {
             test: /\.+(js|jsx|mjs|ts|tsx)$/,
             use: options.defaultLoaders.babel,
             include: matcher,
+            type: 'javascript/auto',
           });
 
           if (resolveSymlinks === false) {
