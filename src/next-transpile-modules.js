@@ -115,7 +115,7 @@ const withTmInitializer = (modules = [], options = {}) => {
 
         if (!packageDirectory) {
           throw new Error(
-            `next-transpile-modules - could not resolve module "${module}". Are you sure the name of the module you are trying to transpile is correct?`
+            `next-transpile-modules - could not resolve module "${module}". Are you sure the name module you are trying to transpile is correct, and it has a "main" or an "exports" field? `
           );
         }
 
