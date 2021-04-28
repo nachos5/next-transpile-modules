@@ -57,15 +57,19 @@ const createLogger = (enable) => {
  * @returns {(path: string) => boolean}
  */
 const createWebpackMatcher = (modulesToTranspile, logger = createLogger(false)) => {
+  // create an array of tuples with each passed in module to transpile and its node_modules depth
+  // example: ['/full/path/to/node_modules/button/node_modules/icon', 2]
+  const modulePathsWithDepth = modulesToTranspile.map((modulePath) => [
+    modulePath,
+    (modulePath.match(/node_modules/g) || []).length,
+  ]);
+
   return (filePath) => {
-    const isNestedNodeModules = (filePath.match(/node_modules/g) || []).length > 1;
+    const nodeModulesDepth = (filePath.match(/node_modules/g) || []).length;
 
-    if (isNestedNodeModules) {
-      return false;
-    }
-
-    return modulesToTranspile.some((modulePath) => {
-      const transpiled = filePath.startsWith(modulePath);
+    return modulePathsWithDepth.some(([modulePath, moduleDepth]) => {
+      // Ensure we aren't implicitly transpiling nested dependencies by comparing depths of modules to be transpiled and the module being checked
+      const transpiled = filePath.startsWith(modulePath) && nodeModulesDepth === moduleDepth;
       if (transpiled) logger(`transpiled: ${filePath}`);
       return transpiled;
     });
