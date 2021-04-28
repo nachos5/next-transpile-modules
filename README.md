@@ -25,14 +25,14 @@ What this plugin **does not aim** to solve:
 
 ## Compatibility table
 
-| Next.js version   | Plugin version |
-| ----------------- | -------------- |
-| Next.js 9.5+ / 10 | 4.x, 5.x, 6.x  |
-| Next.js 9.2       | 3.x            |
-| Next.js 8 / 9     | 2.x            |
-| Next.js 6 / 7     | 1.x            |
+| Next.js version   | Plugin version     |
+| ----------------- | ------------------ |
+| Next.js 9.5+ / 10 | 4.x, 5.x, 6.x, 7.x |
+| Next.js 9.2       | 3.x                |
+| Next.js 8 / 9     | 2.x                |
+| Next.js 6 / 7     | 1.x                |
 
-Latest Next.js version tested: **10.1.3**.
+Latest Next.js version tested: **10.2.0**.
 
 ## Installation
 
