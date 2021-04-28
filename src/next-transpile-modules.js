@@ -52,6 +52,8 @@ const createLogger = (enable) => {
 
 /**
  * Matcher function for webpack to decide which modules to transpile
+ * TODO: could be simplified
+ *
  * @param {string[]} modulesToTranspile
  * @param {function} logger
  * @returns {(path: string) => boolean}
