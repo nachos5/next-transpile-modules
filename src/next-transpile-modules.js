@@ -147,8 +147,6 @@ const withTmInitializer = (modules = [], options = {}) => {
     // Resolve modules to their real paths
     const modulesPaths = modules.map(getPackageRootDirectory);
 
-    if (isWebpack5) logger(`WARNING experimental Webpack 5 support enabled`, true);
-
     logger(`the following paths will get transpiled:\n${modulesPaths.map((mod) => `  - ${mod}`).join('\n')}`);
 
     // Generate Webpack condition for the passed modules
