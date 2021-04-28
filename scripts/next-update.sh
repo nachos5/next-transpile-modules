@@ -10,10 +10,10 @@ npm --prefix "$ROOT/src/__tests__/__apps__/npm-basic" install "next@$NEXT_VERSIO
 echo "==================== PNPM ===================="
 pnpm --dir "$ROOT/src/__tests__/__apps__/pnpm" install "next@$NEXT_VERSION"
 
-echo "==================== WEBPACK 5 ===================="
+echo "==================== WEBPACK 4 ===================="
 yarn --cwd "$ROOT/src/__tests__/__apps__/webpack-4/app" add "next@$NEXT_VERSION"
 
-echo "==================== WEBPACK 5 SYMLINKS ===================="
+echo "==================== WEBPACK 4 SYMLINKS ===================="
 yarn --cwd "$ROOT/src/__tests__/__apps__/webpack-4-symlinks/app" add "next@$NEXT_VERSION"
 
 echo "==================== YARN WORKSPACES ===================="
