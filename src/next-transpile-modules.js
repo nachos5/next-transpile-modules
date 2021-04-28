@@ -52,20 +52,26 @@ const createLogger = (enable) => {
 
 /**
  * Matcher function for webpack to decide which modules to transpile
+ * TODO: could be simplified
+ *
  * @param {string[]} modulesToTranspile
  * @param {function} logger
  * @returns {(path: string) => boolean}
  */
 const createWebpackMatcher = (modulesToTranspile, logger = createLogger(false)) => {
+  // create an array of tuples with each passed in module to transpile and its node_modules depth
+  // example: ['/full/path/to/node_modules/button/node_modules/icon', 2]
+  const modulePathsWithDepth = modulesToTranspile.map((modulePath) => [
+    modulePath,
+    (modulePath.match(/node_modules/g) || []).length,
+  ]);
+
   return (filePath) => {
-    const isNestedNodeModules = (filePath.match(/node_modules/g) || []).length > 1;
+    const nodeModulesDepth = (filePath.match(/node_modules/g) || []).length;
 
-    if (isNestedNodeModules) {
-      return false;
-    }
-
-    return modulesToTranspile.some((modulePath) => {
-      const transpiled = filePath.startsWith(modulePath);
+    return modulePathsWithDepth.some(([modulePath, moduleDepth]) => {
+      // Ensure we aren't implicitly transpiling nested dependencies by comparing depths of modules to be transpiled and the module being checked
+      const transpiled = filePath.startsWith(modulePath) && nodeModulesDepth === moduleDepth;
       if (transpiled) logger(`transpiled: ${filePath}`);
       return transpiled;
     });
@@ -81,8 +87,7 @@ const withTmInitializer = (modules = [], options = {}) => {
   const withTM = (nextConfig = {}) => {
     if (modules.length === 0) return nextConfig;
 
-    // IMPROVE ME: false should not be the default for this option
-    const resolveSymlinks = options.resolveSymlinks || false;
+    const resolveSymlinks = 'resolveSymlinks' in options ? options.resolveSymlinks : true;
     const isWebpack5 = (nextConfig.future && nextConfig.future.webpack5) || false;
     const debug = options.debug || false;
 
@@ -143,8 +148,6 @@ const withTmInitializer = (modules = [], options = {}) => {
 
     // Resolve modules to their real paths
     const modulesPaths = modules.map(getPackageRootDirectory);
-
-    if (isWebpack5) logger(`WARNING experimental Webpack 5 support enabled`, true);
 
     logger(`the following paths will get transpiled:\n${modulesPaths.map((mod) => `  - ${mod}`).join('\n')}`);
 
