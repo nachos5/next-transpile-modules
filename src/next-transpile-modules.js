@@ -116,27 +116,29 @@ const withTmInitializer = (modules = [], options = {}) => {
 
       try {
         // Get the module path
-        packageDirectory = resolve(CWD, module);
+        packageDirectory = resolve(CWD, `${module}/package.json`);
 
         if (!packageDirectory) {
           throw new Error(
-            `next-transpile-modules - could not resolve module "${module}". Are you sure the name module you are trying to transpile is correct, and it has a "main" or an "exports" field?`
+            `next-transpile-modules - could not resolve module "${module}". Are you sure the name module you are trying to transpile is correct, and it has a package.json?`
           );
         }
 
-        // Get the location of its package.json
-        const pkgPath = escalade(packageDirectory, (dir, names) => {
-          if (names.includes('package.json')) {
-            return 'package.json';
-          }
-          return false;
-        });
-        if (pkgPath == null) {
-          throw new Error(
-            `next-transpile-modules - an error happened when trying to get the root directory of "${module}". Is it missing a package.json?\n${err}`
-          );
-        }
-        packageRootDirectory = path.dirname(pkgPath);
+        // // Get the location of its package.json
+        // const pkgPath = escalade(packageDirectory, (dir, names) => {
+        //   if (names.includes('package.json')) {
+        //     return 'package.json';
+        //   }
+        //   return false;
+        // });
+
+        // if (pkgPath == null) {
+        //   throw new Error(
+        //     `next-transpile-modules - an error happened when trying to get the root directory of "${module}". Is it missing a package.json?\n${err}`
+        //   );
+        // }
+
+        packageRootDirectory = path.dirname(packageDirectory);
       } catch (err) {
         throw new Error(
           `next-transpile-modules - an unexpected error happened when trying to resolve "${module}". Are you sure the name module you are trying to transpile is correct, and it has a "main" or an "exports" field?\n${err}`
