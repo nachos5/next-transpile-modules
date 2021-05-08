@@ -122,7 +122,8 @@ const withTmInitializer = (modules = [], options = {}) => {
         // will be removed in a next major version
         try {
           logger(
-            'WARNING - fallbacking to previous module resolution system, you can just pass the name of the package to transpile and it will detect its real path without you having to pass a sub-module.'
+            `DEPRECATED - fallbacking to previous module resolution system for module "${module}", you can now just pass the name of the package to transpile and it will detect its real path without you having to pass a sub-module.`,
+            true
           );
 
           // Get the module path
