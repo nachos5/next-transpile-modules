@@ -116,7 +116,7 @@ const withTmInitializer = (modules = [], options = {}) => {
 
       try {
         // Get the module path
-        packageDirectory = resolve(CWD, `${module}/package.json`);
+        packageDirectory = resolve(CWD, path.join(module, 'package.json'));
 
         if (!packageDirectory) {
           throw new Error(
