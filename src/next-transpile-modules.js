@@ -121,6 +121,10 @@ const withTmInitializer = (modules = [], options = {}) => {
         // DEPRECATED: previous lookup for specific modules, it's confusing, and
         // will be removed in a next major version
         try {
+          logger(
+            'WARNING - fallbacking to previous module resolution system, you can just pass the name of the package to transpile and it will detect its real path without you having to pass a sub-module.'
+          );
+
           // Get the module path
           packageDirectory = resolve(CWD, module);
 
