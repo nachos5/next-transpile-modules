@@ -111,12 +111,12 @@ const withTmInitializer = (modules = [], options = {}) => {
      * @returns {string}
      */
     const getPackageRootDirectory = (module) => {
-      let packageDirectory;
+      let packageLookupDirectory;
       let packageRootDirectory;
 
       try {
-        packageDirectory = resolve(CWD, path.join(module, 'package.json'));
-        packageRootDirectory = path.dirname(pkgPath);
+        packageLookupDirectory = resolve(CWD, path.join(module, 'package.json'));
+        packageRootDirectory = path.dirname(packageLookupDirectory);
       } catch (err) {
         // DEPRECATED: previous lookup for specific modules, it's confusing, and
         // will be removed in a next major version
@@ -126,10 +126,10 @@ const withTmInitializer = (modules = [], options = {}) => {
           );
 
           // Get the module path
-          packageDirectory = resolve(CWD, module);
+          packageLookupDirectory = resolve(CWD, module);
 
           // Get the location of its package.json
-          const pkgPath = escalade(packageDirectory, (_dir, names) => {
+          const pkgPath = escalade(packageLookupDirectory, (_dir, names) => {
             if (names.includes('package.json')) {
               return 'package.json';
             }
