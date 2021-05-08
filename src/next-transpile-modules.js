@@ -116,7 +116,7 @@ const withTmInitializer = (modules = [], options = {}) => {
 
       try {
         packageDirectory = resolve(CWD, path.join(module, 'package.json'));
-        packageRootDirectory = path.dirname(packageDirectory);
+        packageRootDirectory = path.dirname(pkgPath);
       } catch (err) {
         // DEPRECATED: previous lookup for specific modules, it's confusing, and
         // will be removed in a next major version
@@ -129,19 +129,19 @@ const withTmInitializer = (modules = [], options = {}) => {
           packageDirectory = resolve(CWD, module);
 
           // Get the location of its package.json
-          const packageRootDirectory = escalade(packageDirectory, (_dir, names) => {
+          const pkgPath = escalade(packageDirectory, (_dir, names) => {
             if (names.includes('package.json')) {
               return 'package.json';
             }
             return false;
           });
 
-          if (packageRootDirectory == null) {
+          if (pkgPath == null) {
             throw new Error(
-              `next-transpile-modules - an error happened when trying to get the root directory of "${module}".  Are you sure the name module you are trying to transpile is correct, or is it missing a package.json?\n${err}`
+              `next-transpile-modules - an error happened when trying to get the root directory of "${module}". Is it missing a package.json?\n${err}`
             );
           }
-          packageRootDirectory = path.dirname(packageRootDirectory);
+          packageRootDirectory = path.dirname(pkgPath);
         } catch (err) {
           throw new Error(
             `next-transpile-modules - an unexpected error happened when trying to resolve "${module}". Are you sure the name module you are trying to transpile is correct, and it has a "main" or an "exports" field?\n${err}`
