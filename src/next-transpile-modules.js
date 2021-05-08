@@ -118,6 +118,8 @@ const withTmInitializer = (modules = [], options = {}) => {
         packageDirectory = resolve(CWD, path.join(module, 'package.json'));
         packageRootDirectory = path.dirname(pkgPath);
       } catch (err) {
+        // DEPRECATED: previous lookup for specific modules, it's confusing, and
+        // will be removed in a next major version
         try {
           // Get the module path
           packageDirectory = resolve(CWD, module);
@@ -129,6 +131,7 @@ const withTmInitializer = (modules = [], options = {}) => {
             }
             return false;
           });
+
           if (pkgPath == null) {
             throw new Error(
               `next-transpile-modules - an error happened when trying to get the root directory of "${module}". Is it missing a package.json?\n${err}`
