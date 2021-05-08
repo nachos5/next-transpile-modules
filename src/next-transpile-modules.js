@@ -111,41 +111,39 @@ const withTmInitializer = (modules = [], options = {}) => {
      * @returns {string}
      */
     const getPackageRootDirectory = (module) => {
-      let packageDirectory;
-      let packageRootDirectory;
+      let modulePackagePath;
+      let moduleRootDirectory;
 
       try {
-        // Get the module path
-        packageDirectory = resolve(CWD, path.join(module, 'package.json'));
+        // Get the module real path
+        modulePackagePath = resolve(CWD, path.join(module, 'package.json'));
+        moduleRootDirectory = path.dirname(modulePackagePath);
+      } catch (err) {
+        // DEPRECATED will be removed in a future major version
+        // module's package.json was not found, maybe the user pointed to a specific file or subfolder
+        try {
+          modulePackagePath = resolve(CWD, module);
 
-        if (!packageDirectory) {
+          const modulePackagePath = escalade(modulePackagePath, (_dir, names) => {
+            if (names.includes('package.json')) {
+              return 'package.json';
+            }
+            return false;
+          });
+
+          if (modulePackagePath == null) {
+            throw new Error(
+              `next-transpile-modules - an error happened when trying to escalade to the root directory of "${module}". Is it missing a package.json?\n${err}`
+            );
+          }
+        } catch (err) {
           throw new Error(
-            `next-transpile-modules - could not resolve module "${module}". Are you sure the name module you are trying to transpile is correct, and it has a package.json?`
+            `next-transpile-modules - an error happened when trying to get the root directory of "${module}" (ref: 1). Are you sure the name module you are trying to transpile is correct, or is it missing a package.json?\n${err}`
           );
         }
-
-        // // Get the location of its package.json
-        // const pkgPath = escalade(packageDirectory, (dir, names) => {
-        //   if (names.includes('package.json')) {
-        //     return 'package.json';
-        //   }
-        //   return false;
-        // });
-
-        // if (pkgPath == null) {
-        //   throw new Error(
-        //     `next-transpile-modules - an error happened when trying to get the root directory of "${module}". Is it missing a package.json?\n${err}`
-        //   );
-        // }
-
-        packageRootDirectory = path.dirname(packageDirectory);
-      } catch (err) {
-        throw new Error(
-          `next-transpile-modules - an unexpected error happened when trying to resolve "${module}". Are you sure the name module you are trying to transpile is correct, and it has a "main" or an "exports" field?\n${err}`
-        );
       }
 
-      return packageRootDirectory;
+      return moduleRootDirectory;
     };
 
     // Resolve modules to their real paths
