@@ -146,6 +146,8 @@ const withTmInitializer = (modules = [], options = {}) => {
       return moduleRootDirectory;
     };
 
+    logger(`trying to resolve the following modules:\n${modules.map((mod) => `  - ${mod}`).join('\n')}`);
+
     // Resolve modules to their real paths
     const modulesPaths = modules.map(getPackageRootDirectory);
 
