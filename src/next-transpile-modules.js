@@ -103,6 +103,7 @@ const withTmInitializer = (modules = [], options = {}) => {
       mainFields: ['main', 'module', 'source'],
       // Is it right? https://github.com/webpack/enhanced-resolve/issues/283#issuecomment-775162497
       conditionNames: ['require'],
+      exportsFields: [], // we do that because 'package.json' is usually not present in exports
     });
 
     /**
@@ -126,8 +127,16 @@ const withTmInitializer = (modules = [], options = {}) => {
             true
           );
 
+          const deprecatedResolve = enhancedResolve.create.sync({
+            symlinks: resolveSymlinks,
+            extensions: ['.js', '.jsx', '.ts', '.tsx', '.mjs', '.css', '.scss', '.sass'],
+            mainFields: ['main', 'module', 'source'],
+            // Is it right? https://github.com/webpack/enhanced-resolve/issues/283#issuecomment-775162497
+            conditionNames: ['require'],
+          });
+
           // Get the module path
-          packageLookupDirectory = resolve(CWD, module);
+          packageLookupDirectory = deprecatedResolve(CWD, module);
 
           // Get the location of its package.json
           const packageJsonPath = escalade(packageLookupDirectory, (_dir, names) => {
