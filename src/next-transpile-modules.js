@@ -107,6 +107,47 @@ const withTmInitializer = (modules = [], options = {}) => {
     });
 
     /**
+     * Deprecated require.resolve
+     * @deprecated
+     */
+    const deprecatedResolve = enhancedResolve.create.sync({
+      symlinks: resolveSymlinks,
+      extensions: ['.js', '.jsx', '.ts', '.tsx', '.mjs', '.css', '.scss', '.sass'],
+      mainFields: ['main', 'module', 'source'],
+      // Is it right? https://github.com/webpack/enhanced-resolve/issues/283#issuecomment-775162497
+      conditionNames: ['require'],
+    });
+
+    /**
+     * Deprecated getPackageRootDirectory
+     * @deprecated
+     */
+    const deprecatedGetPackageRootDirectory = (module) => {
+      let packageLookupDirectory;
+      let packageRootDirectory;
+
+      // Get the module path
+      packageLookupDirectory = deprecatedResolve(CWD, module);
+
+      // Get the location of its package.json
+      const packageJsonPath = escalade(packageLookupDirectory, (_dir, names) => {
+        if (names.includes('package.json')) {
+          return 'package.json';
+        }
+        return false;
+      });
+
+      if (packageJsonPath == null) {
+        throw new Error(
+          `next-transpile-modules - an error happened when trying to get the root directory of "${module}". Is it missing a package.json?\n${err}`
+        );
+      }
+      packageRootDirectory = path.dirname(packageJsonPath);
+
+      return packageRootDirectory;
+    };
+
+    /**
      * Return the root path (package.json directory) of a given module
      * @param {string} module
      * @returns {string}
@@ -127,31 +168,7 @@ const withTmInitializer = (modules = [], options = {}) => {
             true
           );
 
-          const deprecatedResolve = enhancedResolve.create.sync({
-            symlinks: resolveSymlinks,
-            extensions: ['.js', '.jsx', '.ts', '.tsx', '.mjs', '.css', '.scss', '.sass'],
-            mainFields: ['main', 'module', 'source'],
-            // Is it right? https://github.com/webpack/enhanced-resolve/issues/283#issuecomment-775162497
-            conditionNames: ['require'],
-          });
-
-          // Get the module path
-          packageLookupDirectory = deprecatedResolve(CWD, module);
-
-          // Get the location of its package.json
-          const packageJsonPath = escalade(packageLookupDirectory, (_dir, names) => {
-            if (names.includes('package.json')) {
-              return 'package.json';
-            }
-            return false;
-          });
-
-          if (packageJsonPath == null) {
-            throw new Error(
-              `next-transpile-modules - an error happened when trying to get the root directory of "${module}". Is it missing a package.json?\n${err}`
-            );
-          }
-          packageRootDirectory = path.dirname(packageJsonPath);
+          packageRootDirectory = deprecatedGetPackageRootDirectory(module);
         } catch (err) {
           throw new Error(
             `next-transpile-modules - an unexpected error happened when trying to resolve "${module}". Are you sure the name module you are trying to transpile is correct, and it has a "main" or an "exports" field?\n${err}`
@@ -195,7 +212,7 @@ const withTmInitializer = (modules = [], options = {}) => {
           // If we the code requires/import an absolute path
           if (!request.startsWith('.')) {
             try {
-              const moduleDirectory = getPackageRootDirectory(request);
+              const moduleDirectory = deprecatedGetPackageRootDirectory(request);
 
               if (!moduleDirectory) return false;
 
