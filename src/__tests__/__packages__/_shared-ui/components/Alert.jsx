@@ -2,9 +2,9 @@ import './Alert.scss';
 
 function Alert(props) {
   return (
-    <div id="#alert" className='alert'>
+    <textarea className='alert'>
       {props.children}
-    </div>
+    </textarea>
   );
 }
 

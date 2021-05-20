@@ -130,10 +130,10 @@ describe.each([
 
       expect(response.status()).toBe(200);
 
-      const content = await page.$eval('#alert', (e) => e.textContent);
+      const content = await page.$eval('textarea', (e) => e.textContent);
       expect(content).toBe('My alert');
 
-      const className = await page.$eval('#alert', (e) => e.classList[0]);
+      const className = await page.$eval('textarea', (e) => e.classList[0]);
       expect(className).toBe('alert');
     });
   });
