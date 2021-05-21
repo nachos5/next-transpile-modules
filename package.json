@@ -15,7 +15,7 @@
     "typings": "tsc",
     "prepublishOnly": "npm run typings",
     "pretest": "npm run setup",
-    "quickie": "node --trace-uncaught src/__tests__/setup.js && yarn --cwd src/__tests__/__apps__/webpack-4/app run build",
+    "quickie": "node --trace-uncaught src/__tests__/setup.js && yarn --cwd src/__tests__/__apps__/yarn-workspaces/app run dev",
     "test": "jest --forceExit",
     "test:debug": "jest --detectOpenHandles --forceExit",
     "test:lint": "eslint .",
