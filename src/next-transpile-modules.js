@@ -88,7 +88,7 @@ const withTmInitializer = (modules = [], options = {}) => {
     if (modules.length === 0) return nextConfig;
 
     const resolveSymlinks = 'resolveSymlinks' in options ? options.resolveSymlinks : true;
-    const isWebpack5 = (nextConfig.future && nextConfig.future.webpack5) || false;
+    const isWebpack5 = nextConfig.webpack5 || (nextConfig.future && nextConfig.future.webpack5) || false;
     const debug = options.debug || false;
 
     const logger = createLogger(debug);
