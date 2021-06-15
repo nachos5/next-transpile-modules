@@ -28,6 +28,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Information
+        run: npm version
+
       - name: Install Puppeteer dependencies
         run: bash .github/workflows/setup_puppeteer.sh
         if: startsWith(matrix.os,'ubuntu')
