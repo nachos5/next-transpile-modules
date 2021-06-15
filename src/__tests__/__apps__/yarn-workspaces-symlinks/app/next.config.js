@@ -4,7 +4,8 @@ const withTM = require('./next-transpile-modules')(['shared', 'shared-ts', 'shar
 });
 
 module.exports = withTM({
-  future: {
-    webpack5: true,
+  webpack5: true,
+  eslint: {
+    ignoreDuringBuilds: true,
   },
 });

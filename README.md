@@ -27,12 +27,13 @@ What this plugin **does not aim** to solve:
 
 | Next.js version   | Plugin version     |
 | ----------------- | ------------------ |
+| Next.js 11        | 8.x                |
 | Next.js 9.5+ / 10 | 4.x, 5.x, 6.x, 7.x |
 | Next.js 9.2       | 3.x                |
 | Next.js 8 / 9     | 2.x                |
 | Next.js 6 / 7     | 1.x                |
 
-Latest Next.js version tested: **10.2.0**.
+Latest Next.js version tested: **11.0.0**.
 
 ## Installation
 
@@ -90,9 +91,7 @@ module.exports = withTM();
 const withTM = require('next-transpile-modules')(['somemodule', 'and-another']);
 
 module.exports = withTM({
-  future: {
-    webpack5: false, // you want to keep using Webpack 4
-  },
+  webpack5: false, // you want to keep using Webpack 4
 });
 ```
 
