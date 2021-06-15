@@ -27,6 +27,7 @@ What this plugin **does not aim** to solve:
 
 | Next.js version   | Plugin version     |
 | ----------------- | ------------------ |
+| Next.js 11        | 8.x                |
 | Next.js 9.5+ / 10 | 4.x, 5.x, 6.x, 7.x |
 | Next.js 9.2       | 3.x                |
 | Next.js 8 / 9     | 2.x                |
