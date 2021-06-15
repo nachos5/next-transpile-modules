@@ -90,9 +90,7 @@ module.exports = withTM();
 const withTM = require('next-transpile-modules')(['somemodule', 'and-another']);
 
 module.exports = withTM({
-  future: {
-    webpack5: false, // you want to keep using Webpack 4
-  },
+  webpack5: false, // you want to keep using Webpack 4
 });
 ```
 
