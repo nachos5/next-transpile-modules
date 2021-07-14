@@ -97,7 +97,7 @@ module.exports = withTM({
 
 **Notes:**
 
-- please declare `withTM` as your last plugin (the "most nested" one).
+- please declare `withTM` as your last plugin (the outermost one).
 - ~~make sure all your packages have [a valid `main` field](https://docs.npmjs.com/cli/v6/configuring-npm/package-json#main).~~ (not needed anymore since `7.1.0`)
 - there is currently no way to transpile only parts of a package, it's all or nothing
 
