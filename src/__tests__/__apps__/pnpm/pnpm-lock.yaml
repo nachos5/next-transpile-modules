@@ -4,7 +4,7 @@ specifiers:
   '@types/react': ^16.9.53
   '@types/react-dom': ^16.9.8
   lodash-es: ^4.17.21
-  next: 11.0.0
+  next: 11.0.1
   react: ^17.0.2
   react-dom: ^17.0.2
   sass: ^1.27.0
@@ -14,7 +14,7 @@ specifiers:
 
 dependencies:
   lodash-es: 4.17.21
-  next: 11.0.0_1bd9cf8dc12d80bcf49d5ed8bd83482a
+  next: 11.0.1_1bd9cf8dc12d80bcf49d5ed8bd83482a
   react: 17.0.2
   react-dom: 17.0.2_react@17.0.2
   sass: 1.28.0
@@ -79,16 +79,16 @@ packages:
     resolution: {integrity: sha512-sqKVVVOe5ivCaXDWivIJYVSaEgdQK9ul7a4Kity5Iw7u9+wBAPbX1RMSnLLmp7O4Vzj0WOWwMAJsTL00xwaNug==}
     dev: false
 
-  /@next/env/11.0.0:
-    resolution: {integrity: sha512-VKpmDvTYeCpEQjREg3J4pCmVs/QjEzoLmkM8shGFK6e9AmFd0G9QXOL8HGA8qKhy/XmNb7dHeMqrcMiBua4OgA==}
+  /@next/env/11.0.1:
+    resolution: {integrity: sha512-yZfKh2U6R9tEYyNUrs2V3SBvCMufkJ07xMH5uWy8wqcl5gAXoEw6A/1LDqwX3j7pUutF9d1ZxpdGDA3Uag+aQQ==}
     dev: false
 
-  /@next/polyfill-module/11.0.0:
-    resolution: {integrity: sha512-gydtFzRqsT549U8+sY8382I/f4HFcelD8gdUGnAofQJa/jEU1jkxmjCHC8tmEiyeMLidl7iDZgchfSCpmMzzUg==}
+  /@next/polyfill-module/11.0.1:
+    resolution: {integrity: sha512-Cjs7rrKCg4CF4Jhri8PCKlBXhszTfOQNl9AjzdNy4K5jXFyxyoSzuX2rK4IuoyE+yGp5A3XJCBEmOQ4xbUp9Mg==}
     dev: false
 
-  /@next/react-dev-overlay/11.0.0_react-dom@17.0.2+react@17.0.2:
-    resolution: {integrity: sha512-q+Wp+eStEMThe77zxdeJ/nbuODkHR6P+/dfUqYXZSqbLf6x5c5xwLBauwwVbkCYFZpAlDuL8Jk8QSAH1OsqC2w==}
+  /@next/react-dev-overlay/11.0.1_react-dom@17.0.2+react@17.0.2:
+    resolution: {integrity: sha512-lvUjMVpLsgzADs9Q8wtC5LNqvfdN+M0BDMSrqr04EDWAyyX0vURHC9hkvLbyEYWyh+WW32pwjKBXdkMnJhoqMg==}
     peerDependencies:
       react: ^17.0.2
       react-dom: ^17.0.2
@@ -108,8 +108,8 @@ packages:
       strip-ansi: 6.0.0
     dev: false
 
-  /@next/react-refresh-utils/11.0.0_react-refresh@0.8.3:
-    resolution: {integrity: sha512-hi5eY+KBn4QGtUv7VL2OptdM33fI2hxhd7+omOFmAK+S0hDWhg1uqHqqGJk0W1IfqlWEzzL10WvTJDPRAtDugQ==}
+  /@next/react-refresh-utils/11.0.1_react-refresh@0.8.3:
+    resolution: {integrity: sha512-K347DM6Z7gBSE+TfUaTTceWvbj0B6iNAsFZXbFZOlfg3uyz2sbKpzPYYFocCc27yjLaS8OfR8DEdS2mZXi8Saw==}
     peerDependencies:
       react-refresh: 0.8.3
       webpack: ^4 || ^5
@@ -707,6 +707,7 @@ packages:
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
     deprecated: '"Please update to latest v2.3 or v2.2"'
+    requiresBuild: true
     dev: false
     optional: true
 
@@ -714,6 +715,7 @@ packages:
     resolution: {integrity: sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==}
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
+    requiresBuild: true
     dev: false
     optional: true
 
@@ -1085,8 +1087,8 @@ packages:
       querystring: 0.2.1
     dev: false
 
-  /next/11.0.0_1bd9cf8dc12d80bcf49d5ed8bd83482a:
-    resolution: {integrity: sha512-1OA0ccCTwVtdLats/1v7ReiBVx+Akya0UVhHo9IBr8ZkpDI3/SGNcaruJBp5agy8ROF97VDKkZamoUXxRB9NUA==}
+  /next/11.0.1_1bd9cf8dc12d80bcf49d5ed8bd83482a:
+    resolution: {integrity: sha512-yR7be7asNbvpVNpi6xxEg28wZ7Gqmj1nOt0sABH9qORmF3+pms2KZ7Cng33oK5nqPIzEEFJD0pp2PCe3/ueMIg==}
     engines: {node: '>=12.0.0'}
     hasBin: true
     peerDependencies:
@@ -1105,10 +1107,10 @@ packages:
     dependencies:
       '@babel/runtime': 7.12.5
       '@hapi/accept': 5.0.2
-      '@next/env': 11.0.0
-      '@next/polyfill-module': 11.0.0
-      '@next/react-dev-overlay': 11.0.0_react-dom@17.0.2+react@17.0.2
-      '@next/react-refresh-utils': 11.0.0_react-refresh@0.8.3
+      '@next/env': 11.0.1
+      '@next/polyfill-module': 11.0.1
+      '@next/react-dev-overlay': 11.0.1_react-dom@17.0.2+react@17.0.2
+      '@next/react-refresh-utils': 11.0.1_react-refresh@0.8.3
       assert: 2.0.0
       ast-types: 0.13.2
       browserify-zlib: 0.2.0
@@ -1397,11 +1399,13 @@ packages:
   /querystring/0.2.0:
     resolution: {integrity: sha1-sgmEkgO7Jd+CDadW50cAWHhSFiA=}
     engines: {node: '>=0.4.x'}
+    deprecated: The querystring API is considered Legacy. new code should use the URLSearchParams API instead.
     dev: false
 
   /querystring/0.2.1:
     resolution: {integrity: sha512-wkvS7mL/JMugcup3/rMitHmd9ecIGd2lhFhK9N3UUQ450h66d1r3Y9nvXzQAW1Lq+wyx61k/1pfKS5KuKiyEbg==}
     engines: {node: '>=0.4.x'}
+    deprecated: The querystring API is considered Legacy. new code should use the URLSearchParams API instead.
     dev: false
 
   /queue/6.0.2:
