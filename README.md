@@ -203,6 +203,10 @@ export default function MyApp({ Component, pageProps }) {
 - it supports CSS modules (since Next.js 9.2)
 - it supports `.mjs`
 
+### Where can I find a setup that works?
+
+[Here you go](https://github.com/martpie/monorepo-typescript-next-the-sane-way)!
+
 ### A new version of Next.js is available/I just setup my project, and my build is breaking because of this plugin
 
 It is important to understand that this plugin is a big hack of the Next.js Webpack configuration. When the Next.js team pushes an update to their build configuration, the changes `next-transpile-modules` bring may be outdated, and the plugin needs to be updated (which is a breaking change for this plugin, as the updated plugin is usually not retro-compatible with the previous versions of Next.js).
