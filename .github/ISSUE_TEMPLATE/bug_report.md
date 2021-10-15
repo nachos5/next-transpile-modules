@@ -15,7 +15,7 @@ assignees: ''
 If an npm package, which one?
 
 **Describe the bug**
-A clear and concise description of what the bug is (don't forget the logs if applicable).
+A clear and concise description of what the bug is (please include logs from your terminal with [debug](https://github.com/martpie/next-transpile-modules#withtmtranspilemodules--options) enabled).
 
 **To Reproduce**
 Steps to reproduce the behavior (a reproduction is even better):
