@@ -106,76 +106,19 @@ const withTmInitializer = (modules = [], options = {}) => {
     });
 
     /**
-     * Deprecated require.resolve
-     * @deprecated
-     */
-    const deprecatedResolve = enhancedResolve.create.sync({
-      symlinks: resolveSymlinks,
-      extensions: ['.js', '.jsx', '.ts', '.tsx', '.mjs', '.css', '.scss', '.sass'],
-      mainFields: ['main', 'module', 'source'],
-      // Is it right? https://github.com/webpack/enhanced-resolve/issues/283#issuecomment-775162497
-      conditionNames: ['require'],
-    });
-
-    /**
-     * Deprecated getPackageRootDirectory
-     * @deprecated
-     */
-    const deprecatedGetPackageRootDirectory = (module) => {
-      let packageLookupDirectory;
-      let packageRootDirectory;
-
-      // Get the module path
-      packageLookupDirectory = deprecatedResolve(CWD, module);
-
-      // Get the location of its package.json
-      const packageJsonPath = escalade(packageLookupDirectory, (_dir, names) => {
-        if (names.includes('package.json')) {
-          return 'package.json';
-        }
-        return false;
-      });
-
-      if (packageJsonPath == null) {
-        throw new Error(
-          `next-transpile-modules - an error happened when trying to get the root directory of "${module}". Is it missing a package.json?\n${err}`
-        );
-      }
-      packageRootDirectory = path.dirname(packageJsonPath);
-
-      return packageRootDirectory;
-    };
-
-    /**
      * Return the root path (package.json directory) of a given module
      * @param {string} module
      * @returns {string}
      */
     const getPackageRootDirectory = (module) => {
-      let packageLookupDirectory;
-      let packageRootDirectory;
-
       try {
         packageLookupDirectory = resolve(CWD, path.join(module, 'package.json'));
-        packageRootDirectory = path.dirname(packageLookupDirectory);
+        return path.dirname(packageLookupDirectory);
       } catch (err) {
-        // DEPRECATED: previous lookup for specific modules, it's confusing, and
-        // will be removed in a next major version
-        try {
-          logger(
-            `DEPRECATED - fallbacking to previous module resolution system for module "${module}", you can now just pass the name of the package to transpile and it will detect its real path without you having to pass a sub-module.`,
-            true
-          );
-
-          packageRootDirectory = deprecatedGetPackageRootDirectory(module);
-        } catch (err) {
-          throw new Error(
-            `next-transpile-modules - an unexpected error happened when trying to resolve "${module}". Are you sure the name module you are trying to transpile is correct, and it has a "main" or an "exports" field?\n${err}`
-          );
-        }
+        throw new Error(
+          `next-transpile-modules - an unexpected error happened when trying to resolve "${module}". Are you sure the name of the module you are trying to transpile is correct, and it has a package.json with a "main" or an "exports" field?\n${err}`
+        );
       }
-
-      return packageRootDirectory;
     };
 
     logger(`trying to resolve the following modules:\n${modules.map((mod) => `  - ${mod}`).join('\n')}`);
@@ -204,28 +147,6 @@ const withTmInitializer = (modules = [], options = {}) => {
           // transpiled.
           config.resolve.symlinks = resolveSymlinks;
         }
-
-        const hasInclude = (context, request) => {
-          let absolutePath;
-          // If we the code requires/import an absolute path
-          if (!request.startsWith('.')) {
-            try {
-              const moduleDirectory = deprecatedGetPackageRootDirectory(request);
-
-              if (!moduleDirectory) return false;
-
-              absolutePath = moduleDirectory;
-            } catch (err) {
-              return false;
-            }
-          } else {
-            // Otherwise, for relative imports
-            absolutePath = path.resolve(context, request);
-          }
-          return modulesPaths.some((mod) => {
-            return absolutePath.startsWith(mod);
-          });
-        };
 
         // Since Next.js 8.1.0, config.externals is undefined
         if (config.externals) {
