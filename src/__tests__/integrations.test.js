@@ -5,6 +5,7 @@ describe.each([
   ['webpack-5', 3503],
   ['webpack-5-symlinks', 3504],
   ['pnpm', 3505],
+  ['swc', 3506],
 ])('%s integration', (name, port) => {
   const BASE_URL = `http://localhost:${port}`;
 

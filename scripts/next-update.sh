@@ -21,3 +21,6 @@ yarn --cwd "$ROOT/src/__tests__/__apps__/yarn-workspaces/app" add "next@$NEXT_VE
 
 echo "==================== YARN WORKSPACES SYMLINKS ===================="
 yarn --cwd "$ROOT/src/__tests__/__apps__/yarn-workspaces-symlinks/app" add "next@$NEXT_VERSION"
+
+echo "==================== SWC ===================="
+yarn --cwd "$ROOT/src/__tests__/__apps__/swc/app" add "next@$NEXT_VERSION"
