@@ -149,7 +149,7 @@ const withTmInitializer = (modules = [], options = {}) => {
         }
 
         // Since Next.js 8.1.0, config.externals is undefined
-        if (config.externals) {
+        if (Array.isArray(config.externals)) {
           config.externals = config.externals.map((external) => {
             if (typeof external !== 'function') return external;
 
