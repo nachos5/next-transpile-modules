@@ -8,9 +8,18 @@
 
 const path = require('path');
 const process = require('process');
+const pkgUp = require('pkg-up');
+const { findRootPackageJsonPath } = require('@kiwicom/monorepo-utils');
+const symlinked = require('symlinked');
 
 const enhancedResolve = require('enhanced-resolve');
 const escalade = require('escalade/sync');
+
+const mainPkg = require(pkgUp.sync());
+const rootJson = findRootPackageJsonPath();
+const rootDirectory = path.dirname(rootJson);
+const rootPackageJson = require(rootJson);
+const symlinkedPackages = symlinked.paths(rootDirectory);
 
 // Use me when needed
 // const util = require('util');
@@ -19,6 +28,19 @@ const escalade = require('escalade/sync');
 // };
 
 const CWD = process.cwd();
+
+const resolve = enhancedResolve.create.sync({
+  symlinks: false,
+});
+
+const mainPackages = Object.keys({
+  ...mainPkg.dependencies,
+  ...mainPkg.peerDependencies,
+  ...rootPackageJson.dependencies,
+  ...rootPackageJson.peerDependencies,
+}).map((key) => {
+  return pkgUp.sync({ cwd: resolve(__dirname, key) });
+});
 
 /**
  * Check if two regexes are equal
@@ -37,6 +59,38 @@ const regexEqual = (x, y) => {
     x.ignoreCase === y.ignoreCase &&
     x.multiline === y.multiline
   );
+};
+
+/**
+ * Resolve modules to their real paths
+ * @param {string[]} modules
+ */
+const generateResolvedModules = (modules) => {
+  const resolvedModules = modules
+    .map((module) => {
+      let resolved;
+
+      try {
+        resolved = resolve(__dirname, module);
+      } catch (e) {
+        try {
+          resolved = resolve(__dirname, path.join(module, 'package.json'));
+        } catch (fallbackError) {
+          console.error(e);
+          console.error(fallbackError);
+        }
+      }
+
+      if (!resolved)
+        throw new Error(
+          `next-transpile-modules: could not resolve module "${module}". Are you sure the name of the module you are trying to transpile is correct?`
+        );
+
+      return resolved;
+    })
+    .map(path.dirname);
+
+  return resolvedModules;
 };
 
 /**
@@ -221,8 +275,12 @@ const withTmInitializer = (modules = [], options = {}) => {
           );
 
           if (nextGlobalCssLoader) {
-            nextGlobalCssLoader.issuer = { or: [matcher, nextGlobalCssLoader.issuer] };
-            nextGlobalCssLoader.include = { or: [...modulesPaths, nextGlobalCssLoader.include] };
+            nextGlobalCssLoader.issuer = {
+              or: [matcher, nextGlobalCssLoader.issuer],
+            };
+            nextGlobalCssLoader.include = {
+              or: [...modulesPaths, nextGlobalCssLoader.include],
+            };
           } else if (!options.isServer) {
             // Note that Next.js ignores global CSS imports on the server
             console.warn('next-transpile-modules - could not find default CSS rule, global CSS imports may not work');
@@ -235,7 +293,9 @@ const withTmInitializer = (modules = [], options = {}) => {
           // FIXME: SASS works only when using a custom _app.js file.
           // See https://github.com/vercel/next.js/blob/24c3929ec46edfef8fb7462a17edc767a90b5d2b/packages/next/build/webpack/config/blocks/css/index.ts#L211
           if (nextGlobalSassLoader) {
-            nextGlobalSassLoader.issuer = { or: [matcher, nextGlobalSassLoader.issuer] };
+            nextGlobalSassLoader.issuer = {
+              or: [matcher, nextGlobalSassLoader.issuer],
+            };
           } else if (!options.isServer) {
             // Note that Next.js ignores global SASS imports on the server
             console.info('next-transpile-modules - global SASS imports only work with a custom _app.js file');
@@ -249,6 +309,55 @@ const withTmInitializer = (modules = [], options = {}) => {
           ...config.watchOptions.ignored.filter((pattern) => pattern !== '**/node_modules/**'),
           `**node_modules/{${modules.map((mod) => `!(${mod})`).join(',')}}/**/*`,
         ];
+
+        const resolvedModules = generateResolvedModules(modules, resolve);
+        if (options.dev) {
+          // HMR magic
+          const checkForTranspiledModules = (currentPath) =>
+            modules.find((mod) => {
+              return symlinkedPackages.some((sym) => {
+                if (currentPath === pkgUp.sync({ cwd: sym })) {
+                  return true;
+                }
+              });
+              // not used for right now
+              return currentPath.includes(path.dirname(mod)) || currentPath.includes(mod);
+            });
+
+          const snapshot = Object.assign({}, config.snapshot);
+
+          const subPackages = resolvedModules.reduce((acc, module) => {
+            const pkg = require(path.join(pkgUp.sync({ cwd: module })));
+            let allPossibleModules = Object.keys({
+              ...pkg.dependencies,
+              ...pkg.peerDependencies,
+            });
+            allPossibleModules = Array.from(new Set([...allPossibleModules]));
+
+            allPossibleModules.forEach((key) => {
+              const resolveFrom = path.dirname(pkgUp.sync({ cwd: module }));
+              try {
+                acc.push(pkgUp.sync({ cwd: resolve(resolveFrom, key) }));
+              } catch (e) {
+                console.log('error resolving', key);
+              }
+            });
+
+            return acc;
+          }, []);
+
+          const cacheablePackages = Array.from(new Set([...mainPackages, ...subPackages])).filter((i) => {
+            return !checkForTranspiledModules(i);
+          });
+
+          config.snapshot = Object.assign(snapshot, {
+            managedPaths: cacheablePackages,
+          });
+
+          config.cache = {
+            type: 'memory',
+          };
+        }
 
         // Overload the Webpack config if it was already overloaded
         if (typeof nextConfig.webpack === 'function') {
