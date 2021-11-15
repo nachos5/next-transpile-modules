@@ -16,9 +16,14 @@ const enhancedResolve = require('enhanced-resolve');
 const escalade = require('escalade/sync');
 
 const mainPkg = require(pkgUp.sync());
-const rootJson = findRootPackageJsonPath();
-const rootDirectory = path.dirname(rootJson);
-const rootPackageJson = require(rootJson);
+let rootJson = null;
+// fails if not monorepo
+try {
+  rootJson = findRootPackageJsonPath();
+} catch (e) {}
+const CWD = process.cwd();
+const rootDirectory = path.dirname(rootJson ? rootJson : CWD);
+const rootPackageJson = rootJson ? require(rootJson) : null;
 const symlinkedPackages = symlinked.paths(rootDirectory);
 
 // Use me when needed
@@ -27,18 +32,21 @@ const symlinkedPackages = symlinked.paths(rootDirectory);
 //   console.log(util.inspect(object, { showHidden: false, depth: null }));
 // };
 
-const CWD = process.cwd();
-
 const resolve = enhancedResolve.create.sync({
   symlinks: false,
 });
 
-const mainPackages = Object.keys({
+const dependencies = {
   ...mainPkg.dependencies,
   ...mainPkg.peerDependencies,
-  ...rootPackageJson.dependencies,
-  ...rootPackageJson.peerDependencies,
-})
+};
+if (rootPackageJson) {
+  Object.assign(dependencies, {
+    ...rootPackageJson.dependencies,
+    ...rootPackageJson.peerDependencies,
+  });
+}
+const mainPackages = Object.keys(dependencies)
   .map((key) => {
     try {
       return pkgUp.sync({ cwd: resolve(__dirname, key) });
