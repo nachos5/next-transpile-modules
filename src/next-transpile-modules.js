@@ -88,13 +88,16 @@ const generateResolvedModules = (modules) => {
         }
       }
 
-      if (!resolved)
-        throw new Error(
-          `next-transpile-modules: could not resolve module "${module}". Are you sure the name of the module you are trying to transpile is correct?`
-        );
+      if (!resolved) {
+        return null;
+        // const errorMsg = `next-transpile-modules: could not resolve module "${module}". Are you sure the name of the module you are trying to transpile is correct?`;
+        // console.error(errorMsg);
+        // throw new Error(errorMsg);
+      }
 
       return resolved;
     })
+    .filter(Boolean)
     .map(path.dirname);
 
   return resolvedModules;
