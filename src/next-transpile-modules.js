@@ -38,9 +38,16 @@ const mainPackages = Object.keys({
   ...mainPkg.peerDependencies,
   ...rootPackageJson.dependencies,
   ...rootPackageJson.peerDependencies,
-}).map((key) => {
-  return pkgUp.sync({ cwd: resolve(__dirname, key) });
-});
+})
+  .map((key) => {
+    try {
+      return pkgUp.sync({ cwd: resolve(__dirname, key) });
+    } catch (e) {
+      // console.error(e);
+      return null;
+    }
+  })
+  .filter(Boolean);
 
 /**
  * Check if two regexes are equal
