@@ -320,6 +320,10 @@ const withTmInitializer = (modules = [], options = {}) => {
           }
         }
 
+        // https://github.com/vercel/next.js/commit/03ecbcf1822939db129e18b55c2aa7af65e33114#diff-35e60cb9cfc6f14c2998799e7e5a28e5adfd6ededc273851531da3a1e506b0d4
+        // commit above added Object.freeze to watchOptions - we don't want that since next-transpile-modules can't modify the options if frozen
+        config.watchOptions = { ...config.watchOptions };
+
         // Make hot reloading work!
         // FIXME: not working on Wepback 5
         // https://github.com/vercel/next.js/issues/13039
